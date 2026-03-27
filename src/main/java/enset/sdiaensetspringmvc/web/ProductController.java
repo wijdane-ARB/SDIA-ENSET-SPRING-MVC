@@ -7,16 +7,13 @@ import org.springframework.ui.Model;
 import enset.sdiaensetspringmvc.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class ProductController {
     @Autowired
     private ProductRepository productRepository;
-    @GetMapping("/index")
+    @GetMapping("/user/index")
     public String index(Model model) {
         model.addAttribute("productList", productRepository.findAll());
         return "products";
@@ -24,26 +21,30 @@ public class ProductController {
     }
     @GetMapping("/")
     public String home() {
-        return "redirect:/index";
+        return "redirect:/user/index";
 
     }
-    @GetMapping("/delete")
+    @PostMapping("/admin/delete")
     public String delete(@RequestParam(name = "id") Long id) {
         productRepository.deleteById(id);
-        return "redirect:/index";
+        return "redirect:/user/index";
     }
-    @GetMapping("/newProduct")
+    @GetMapping("/admin/newProduct")
     public String newProduct(Model model) {
         Products product = new Products();
         model.addAttribute("product", product);
         return "newProduct";
 
     }
-    @PostMapping("/saveProduct")
+    @PostMapping("/admin/saveProduct")
     public String saveProduct(@Valid @ModelAttribute("product") Products product, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) return "newProduct";
         productRepository.save(product);
-        return "redirect:/newProduct";
+        return "redirect:/admin/newProduct";
 
+    }
+    @GetMapping("/notAuthorized")
+    public String notAuthorized() {
+        return "notAuthorized";
     }
 }
