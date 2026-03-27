@@ -1,6 +1,7 @@
 package enset.sdiaensetspringmvc.web;
 
 import enset.sdiaensetspringmvc.entities.Products;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -46,5 +47,14 @@ public class ProductController {
     @GetMapping("/notAuthorized")
     public String notAuthorized() {
         return "notAuthorized";
+    }
+    @GetMapping("/login")
+    public String login() {
+        return "login";
+    }
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate();
+        return "login";
     }
 }
